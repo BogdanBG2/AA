@@ -1,0 +1,40 @@
+					Analiza Algoritmilor
+						Tema 2
+						de Bogdan - Andrei Buga, 322CB
+
+	Pentru inceput, se citesc din fisierul "graph.in" numarul N de noduri si muchiile grafului
+pe care vrem sa il cercetam, cu ajutorul metodei "readGraph". Apoi, se initializeaza toate vari-
+abilele de forma "xi-j" (i si j sunt ambele in [1, N]) si "ai-j" (i e in [1, 1+N/2] si 
+j e in [1, N]). 
+	Operatiile definite sunt:
+	1) AND (x&y)
+	2) OR (x|y)
+	3) NEGATE (~x)
+	4) ComposedExpersion ((x|~y)&(~x|y))
+
+	Primul pas al algoritmului este acela de a verifica daca fiecare nod al grafului se leaga
+de alte cel putin 2 noduri. In cazul in care aceasta conditie nu este respectata, se va genera o
+expresie booleana mereu egala cu "false" si anume, "x1-1 & ~x1-1" si programul se va incheia.
+	
+	Daca aceasta conditie este indeplinita, trecem la pasul 2: generarea unei expresii
+booleene pentru fiecare nod i astfel incat:
+		a) nodul i sa apara o singura data in ciclul hamiltonian ales, adica din nodul i
+		sa avem exact 2 muchii care sa fie si in ciclul hamiltonian ales;
+		b) cel mai scurt drum de la nodul 1 la nodul i pe drumul ales sa fie de lungime
+		cel mult (N/2+1).
+	Tot acest pas are complexitatea O(N^4) (pas realizat prin functia "iterateBy_X").
+
+	Pasul 3 presupune generarea tuturor expresiilor care verifica daca fiecare muchie a 
+grafului apare cel mult o data in ciclul hamiltonian ales. Acest pas are complexitatea O(N^2)
+si pentru executia lui, se foloseste functia "generateValidEdges".
+	
+	Pasul 4 consta in verificarea drumurilor care pot pleca din nodul 1 (verificare facuta
+prin functia "firstA"). Dupa aceea, se genereaza iterativ expresii boleene care depind de "ai-j"
+(i e in [2, 1+N/2], iar j e in [2, N]), de toate nodurile care se leaga de nodul j si de valoarea
+de adevar a negarii expresiei "Cel mai scurt drum de la 1 la j, pe calea aleasa, este cel mult i".
+Expresia corespunzatoare acestui pas este generata prin functia "iterateBy_A" de complexitate 
+O(N^3).
+
+	Complexitatea intregului algoritm de generare a expresiei booleene (instanta SAT) este 
+O(N^4) (pasul 2) + O(N^2) (pasul 3) + O(N^3) (pasul 4) = O(N^4) => Transformare polinomiala
+==> "Hamiltonian Cycle Problem" este o problema reductibila polinomial la SAT.
